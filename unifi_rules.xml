@@ -1,0 +1,22 @@
+<group name="unifi">
+  <rule id="100002" level="6">
+    <decoded_as>unifi</decoded_as>
+    <match>Ubiquiti</match>
+    <description>UniFi $(type) event</description>
+  </rule>
+  <rule id="100003" level="6">
+    <decoded_as>unifi-lan2lan</decoded_as>
+    <match>LAN_LAN</match>
+    <description>VLAN BW VLAN</description>
+  </rule>
+  <rule id="100004" level="6">
+    <decoded_as>unifi-lan2wan</decoded_as>
+    <match>LAN_WAN</match>
+    <description>INT TO EXT</description>
+  </rule>
+  <rule id="100005" level="6">
+    <decoded_as>unifi-console</decoded_as>
+    <match>UniFi OS</match>
+    <description>UniFi Console event</description>
+  </rule>
+</group>
