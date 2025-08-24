@@ -1,7 +1,7 @@
 <!-- Network App samples
 Jul 30 05:18:58 2025-07-30T05:18:58.754Z udr7 CEF:0|Ubiquiti|UniFi Network|9.3.43|546|Admin Made Config Changes|2|UNIFIcategory=System UNIFIsubCategory=Admin UNIFIhost=udr7 UNIFIsettingsChanges=this_controller: false UNIFIaccessMethod=web UNIFIsettingsSection=SETTINGS_SYSTEM UNIFIsettingsEntry=rsyslogd UNIFIadmin=admin src=172.20.0.5 msg=admin made a change to  in System settings. Source IP: 172.20.0.5
 
-Jul 30 05:35:34 2025-07-30T05:35:34.434Z udr7 CEF:0|Ubiquiti|UniFi Network|9.3.43|400|WiFi Client Connected|1|UNIFIcategory=Monitoring UNIFIsubCategory=WiFi UNIFIhost=udr7 UNIFIconnectedToDeviceName=udr7 UNIFIconnectedToDeviceIp=172.20.0.1 UNIFIconnectedToDeviceMac=1c:0b:8b:46:ff:11 UNIFIconnectedToDeviceModel=UDR7 UNIFIconnectedToDeviceVersion=4.2.15 UNIFIclientAlias=Apple iPhone 11:ff UNIFIclientIp=172.20.0.10 UNIFIclientMac=c2:ba:c4:42:11:ff UNIFIwifiChannel=60 UNIFIwifiChannelWidth=40 UNIFIwifiName=WIFIbaby UNIFIwifiBand=na UNIFIauthMethod=wpapsk UNIFIWiFiRssi=-68 UNIFInetworkName=3LAN UNIFInetworkSubnet=172.20.0.0/24 UNIFInetworkVlan=3 msg=Apple iPhone 11:ff connected to WIFIbaby on udr7. Connection Info: Ch. 60 (5 GHz, 40 MHz), -68 dBm. IP: 172.20.0.5
+Jul 30 05:35:34 2025-07-30T05:35:34.434Z udr7 CEF:0|Ubiquiti|UniFi Network|9.3.43|400|WiFi Client Connected|1|UNIFIcategory=Monitoring UNIFIsubCategory=WiFi UNIFIhost=udr7 UNIFIconnectedToDeviceName=udr7 UNIFIconnectedToDeviceIp=172.20.0.1 UNIFIconnectedToDeviceMac=1c:0b:8b:46:ff:11 UNIFIconnectedToDeviceModel=UDR7 UNIFIconnectedToDeviceVersion=4.2.15 UNIFIclientAlias=Apple iPhone 11:ff UNIFIclientIp=172.20.0.10 UNIFIclientMac=c2:ba:c4:27:11:ff UNIFIwifiChannel=60 UNIFIwifiChannelWidth=40 UNIFIwifiName=WIFIbaby UNIFIwifiBand=na UNIFIauthMethod=wpapsk UNIFIWiFiRssi=-68 UNIFInetworkName=Silo UNIFInetworkSubnet=172.20.0.0/24 UNIFInetworkVlan=3 msg=Apple iPhone 11:ff connected to WIFIbaby on udr7. Connection Info: Ch. 60 (5 GHz, 40 MHz), -68 dBm. IP: 172.20.0.5
 -->
 
 <decoder name="unifi">
@@ -14,7 +14,7 @@ Jul 30 05:35:34 2025-07-30T05:35:34.434Z udr7 CEF:0|Ubiquiti|UniFi Network|9.3.4
   <!--
   Jul 29 22:17:40 udr7 CEF:0|Ubiquiti|UniFi OS|4.2.15|admins|1|msg=admin accessed the UniFi OS via the console's IP. Source IP: 172.20.0.5
 -->
-  <regex type="pcre2">.*UniFi OS\|(\d*\.*\d*\.*\d*)\|(\w+)\|(\d)\|msg=(.+) Source IP: (\d+\.\d+\.\d+\.\d+)</regex>
+  <regex type="pcre2">UniFi OS\|(\d*\.*\d*\.*\d*)\|(\w+)\|(\d)\|msg=(.+) Source IP: (\d+\.\d+\.\d+\.\d+)</regex>
   <order>app_version, type, severity, message, srcip</order>
 </decoder>
 
@@ -44,13 +44,13 @@ Jul 30 05:35:34 2025-07-30T05:35:34.434Z udr7 CEF:0|Ubiquiti|UniFi Network|9.3.4
 
 <decoder name="unifi">
   <parent>unifi</parent>
-  <regex type="pcre2">UNIFIsubCategory=(\w+)</regex>
+  <regex type="pcre2">UNIFIsubCategory=(.+?)(?=\s(?:UNIFI\w+=|src=|msg=))</regex>
   <order>uni_subcat</order>
 </decoder>
 
 <decoder name="unifi">
   <parent>unifi</parent>
-  <regex type="pcre2">UNIFIhost=(\w+)</regex>
+  <regex type="pcre2">UNIFIhost=(.+?)(?=\s(?:UNIFI\w+=|src=|msg=))</regex>
   <order>uni_host</order>
 </decoder>
 
@@ -68,12 +68,12 @@ Jul 30 05:35:34 2025-07-30T05:35:34.434Z udr7 CEF:0|Ubiquiti|UniFi Network|9.3.4
 
 <decoder name="unifi">
   <parent>unifi</parent>
-  <regex type="pcre2">UNIFIclientAlias=(\S+)</regex>
+  <regex type="pcre2">UNIFIclientAlias=(.+?)(?=\s(?:UNIFI\w+=|src=|msg=))</regex>
   <order>uni_clientdev</order>
 </decoder>
 
 <decoder name="unifi">
   <parent>unifi</parent>
-  <regex type="pcre2">UNIFIwifiName=(\S+)</regex>
+  <regex type="pcre2">UNIFIwifiName=(.+?)(?=\s(?:UNIFI\w+=|src=|msg=))</regex>
   <order>uni_ssid</order>
 </decoder>
