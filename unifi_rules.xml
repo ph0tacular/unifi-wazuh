@@ -12,11 +12,25 @@
   <rule id="100004" level="6">
     <decoded_as>unifi-lan2lan</decoded_as>
     <match>LAN_LAN</match>
-    <description>VLAN BW VLAN</description>
+    <field name="type">A</field>
+    <description>Traffic Internal Allow</description>
   </rule>
   <rule id="100005" level="6">
     <decoded_as>unifi-lan2wan</decoded_as>
     <match>LAN_WAN</match>
-    <description>INT TO EXT</description>
+    <field name="type">A</field>
+    <description>Traffic External Allow</description>
+  </rule>
+  <rule id="100006" level="6">
+    <decoded_as>unifi-lan2lan</decoded_as>
+    <match>LAN_LAN</match>
+    <field name="type">B</field>
+    <description>Traffic Internal Block</description>
+  </rule>
+  <rule id="100007" level="6">
+    <decoded_as>unifi-lan2wan</decoded_as>
+    <match>LAN_WAN</match>
+    <field name="type">B</field>
+    <description>Traffic External Block</description>
   </rule>
 </group>
