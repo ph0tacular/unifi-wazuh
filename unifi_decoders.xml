@@ -8,18 +8,20 @@ Jul 30 05:35:34 udr7 CEF:0|Ubiquiti|UniFi Network|9.3.45|400|WiFi Client Connect
   <program_name>CEF</program_name>
 </decoder>
 
+<!-- traffic (syslog) -->
 <decoder name="unifi-lan2lan">
   <prematch>LAN_LAN</prematch>
-  <regex type="pcre2" offset="after_prematch">^-\w-\d+\] DESCR=\"(.*)\" IN=(\w+) OUT=(\w+) MAC=(\w{2}:\w{2}:\w{2}:\w{2}:\w{2}:\w{2}):(\w{2}:\w{2}:\w{2}:\w{2}:\w{2}:\w{2}):\w{2}:\w{2} SRC=(\d+\.\d+\.\d+\.\d+) DST=(\d+\.\d+\.\d+\.\d+)</regex>
-  <order>uni_rulename, inbound, outbound, intmac, devmac, srcip, dstip</order>
+  <regex type="pcre2" offset="after_prematch">^-(\w)-\d+\] DESCR=\"(.*)\" IN=(\w+) OUT=(\w+) MAC=(\w{2}:\w{2}:\w{2}:\w{2}:\w{2}:\w{2}):(\w{2}:\w{2}:\w{2}:\w{2}:\w{2}:\w{2}):\w{2}:\w{2} SRC=(\d+\.\d+\.\d+\.\d+) DST=(\d+\.\d+\.\d+\.\d+) LEN=\d+ TOS=\d+ PREC=\w+ TTL=\d+ ID=\d+ PROTO=(\w+) SPT=(\d+) DPT=(\d+)</regex>
+  <order>type, uni_rulename, inbound, outbound, intmac, devmac, srcip, dstip, proto, srcprt, dstprt</order>
 </decoder>
 
 <decoder name="unifi-lan2wan">
   <prematch>LAN_WAN</prematch>
-  <regex type="pcre2" offset="after_prematch">^-\w-\d+\] DESCR=\"(.*)\" IN=(\w+) OUT=(\w+) MAC=(\w{2}:\w{2}:\w{2}:\w{2}:\w{2}:\w{2}):(\w{2}:\w{2}:\w{2}:\w{2}:\w{2}:\w{2}):\w{2}:\w{2} SRC=(\d+\.\d+\.\d+\.\d+) DST=(\d+\.\d+\.\d+\.\d+)</regex>
-  <order>uni_rulename, inbound, outbound, intmac, devmac, srcip, dstip</order>
+  <regex type="pcre2" offset="after_prematch">^-(\w)-\d+\] DESCR=\"(.*)\" IN=(\w+) OUT=(\w+) MAC=(\w{2}:\w{2}:\w{2}:\w{2}:\w{2}:\w{2}):(\w{2}:\w{2}:\w{2}:\w{2}:\w{2}:\w{2}):\w{2}:\w{2} SRC=(\d+\.\d+\.\d+\.\d+) DST=(\d+\.\d+\.\d+\.\d+) LEN=\d+ TOS=\d+ PREC=\w+ TTL=\d+ ID=\d+.*?PROTO=(\w+) SPT=(\d+) DPT=(\d+)</regex>
+  <order>type, uni_rulename, inbound, outbound, intmac, devmac, srcip, dstip, proto, srcprt, dstprt</order>
 </decoder>
 
+<!-- base -->
 <decoder name="unifi">
   <parent>unifi</parent>
   <regex type="pcre2" offset="after_parent">0\|Ubiquiti\|(.+)\|(\d*\.*\d*\.*\d*)\|(\d+)\|(.+)\|(\d)\|</regex>
@@ -33,6 +35,7 @@ Jul 30 05:35:34 udr7 CEF:0|Ubiquiti|UniFi Network|9.3.45|400|WiFi Client Connect
   <order>app_version, type, severity, message</order>
 </decoder>
 
+<!-- kv start -->
 <decoder name="unifi">
   <parent>unifi</parent>
   <regex type="pcre2">UNIFIcategory=(\w+)</regex>
@@ -65,12 +68,93 @@ Jul 30 05:35:34 udr7 CEF:0|Ubiquiti|UniFi Network|9.3.45|400|WiFi Client Connect
 
 <decoder name="unifi">
   <parent>unifi</parent>
+  <regex type="pcre2">msg=(.+)</regex>
+  <order>message</order>
+</decoder>
+
+<!-- config changes -->
+<decoder name="unifi">
+  <parent>unifi</parent>
+  <regex type="pcre2">UNIFIsettingsSection=(.+?)(?=\s(?:UNIFI\w+=|src=|msg=))</regex>
+  <order>uni_changedsection</order>
+</decoder>
+
+<decoder name="unifi">
+  <parent>unifi</parent>
+  <regex type="pcre2">UNIFIsettingsEntry=(.+?)(?=\s(?:UNIFI\w+=|src=|msg=))</regex>
+  <order>uni_changedentry</order>
+</decoder>
+
+<decoder name="unifi">
+  <parent>unifi</parent>
+  <regex type="pcre2">UNIFIadmin=(.+?)(?=\s(?:UNIFI\w+=|src=|msg=))</regex>
+  <order>uni_changeagent</order>
+</decoder>
+
+<!-- wifi -->
+<decoder name="unifi">
+  <parent>unifi</parent>
   <regex type="pcre2">UNIFIclientAlias=(.+?)(?=\s(?:UNIFI\w+=|src=|msg=))</regex>
   <order>uni_clientdev</order>
 </decoder>
 
 <decoder name="unifi">
   <parent>unifi</parent>
+  <regex type="pcre2">UNIFIclientIp=(\d+\.\d+\.\d+\.\d+)</regex>
+  <order>uni_clientip</order>
+</decoder>
+
+<decoder name="unifi">
+  <parent>unifi</parent>
   <regex type="pcre2">UNIFIwifiName=(.+?)(?=\s(?:UNIFI\w+=|src=|msg=))</regex>
   <order>uni_ssid</order>
+</decoder>
+
+<decoder name="unifi">
+  <parent>unifi</parent>
+  <regex type="pcre2">UNIFIWiFiRssi=(.+?)(?=\s(?:UNIFI\w+=|src=|msg=))</regex>
+  <order>uni_rssi</order>
+</decoder>
+
+<!-- threat -->
+<decoder name="unifi">
+  <parent>unifi</parent>
+  <regex type="pcre2">proto=(\w+)</regex>
+  <order>proto</order>
+</decoder>
+
+<decoder name="unifi">
+  <parent>unifi</parent>
+  <regex type="pcre2">spt=(\d+)</regex>
+  <order>srcprt</order>
+</decoder>
+
+<decoder name="unifi">
+  <parent>unifi</parent>
+  <regex type="pcre2">dst=(\d+\.\d+\.\d+\.\d+)</regex>
+  <order>dstip</order>
+</decoder>
+
+<decoder name="unifi">
+  <parent>unifi</parent>
+  <regex type="pcre2">dpt=(\d+)</regex>
+  <order>dstprt</order>
+</decoder>
+
+<decoder name="unifi">
+  <parent>unifi</parent>
+  <regex type="pcre2">UNIFIrisk=(\w+)</regex>
+  <order>uni_risk</order>
+</decoder>
+
+<decoder name="unifi">
+  <parent>unifi</parent>
+  <regex type="pcre2">UNIFIipsSignature=(.+?)(?=\s(?:UNIFI\w+=|src=|msg=))</regex>
+  <order>uni_signature</order>
+</decoder>
+
+<decoder name="unifi">
+  <parent>unifi</parent>
+  <regex type="pcre2">UNIFIipsSignatureId=(\d+)</regex>
+  <order>uni_sigid</order>
 </decoder>
