@@ -7,3 +7,6 @@ oct25:
 * divided syslog traffic events based on firewall action
 * ordered key values by section
 * preliminary fields for Threat Detected and Blocked events
+
+nov12:
+* small fix to base in severity field
