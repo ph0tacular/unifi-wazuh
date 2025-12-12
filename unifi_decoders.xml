@@ -24,7 +24,7 @@ Jul 30 05:35:34 udr7 CEF:0|Ubiquiti|UniFi Network|9.3.45|400|WiFi Client Connect
 <!-- base -->
 <decoder name="unifi">
   <parent>unifi</parent>
-  <regex type="pcre2" offset="after_parent">0\|Ubiquiti\|(.+)\|(\d*\.*\d*\.*\d*)\|(\d+)\|(.+)\|(\d)\|</regex>
+  <regex type="pcre2" offset="after_parent">0\|Ubiquiti\|(.+)\|(\d*\.*\d*\.*\d*)\|(\d+)\|(.+)\|(\d{1,2})\|</regex>
   <order>uni_app, app_version, event_id, type, severity</order>
 </decoder>
 
