@@ -1,36 +1,77 @@
 <group name="unifi">
-  <rule id="100002" level="6">
+  <!-- base rule (silent parent) -->
+  <rule id="100102" level="0">
     <decoded_as>unifi</decoded_as>
     <match>Ubiquiti</match>
     <description>UniFi $(type) event</description>
   </rule>
-  <rule id="100003" level="6">
-    <if_sid>100002</if_sid>
+
+  <!-- console events -->
+  <rule id="100103" level="3">
+    <if_sid>100102</if_sid>
     <match>UniFi OS</match>
     <description>UniFi Console $(type) event</description>
   </rule>
-  <rule id="100004" level="6">
+
+  <!-- traffic allow -->
+  <rule id="100104" level="3">
     <decoded_as>unifi-lan2lan</decoded_as>
     <match>LAN_LAN</match>
     <field name="type">A</field>
     <description>Traffic Internal Allow</description>
+    <group>pci_dss_10.2.1,nist_800_53_AU-3,hipaa_164.312(b)</group>
   </rule>
-  <rule id="100005" level="6">
+  <rule id="100105" level="3">
     <decoded_as>unifi-lan2wan</decoded_as>
     <match>LAN_WAN</match>
     <field name="type">A</field>
     <description>Traffic External Allow</description>
+    <group>pci_dss_10.2.1,nist_800_53_AU-3,hipaa_164.312(b)</group>
   </rule>
-  <rule id="100006" level="6">
+
+  <!-- traffic block -->
+  <rule id="100106" level="7">
     <decoded_as>unifi-lan2lan</decoded_as>
     <match>LAN_LAN</match>
     <field name="type">D</field>
     <description>Traffic Internal Block</description>
+    <group>pci_dss_1.3.2,pci_dss_10.2.4,nist_800_53_SC-7,nist_800_53_AU-3,hipaa_164.312(e)(1)</group>
   </rule>
-  <rule id="100007" level="6">
+  <rule id="100107" level="7">
     <decoded_as>unifi-lan2wan</decoded_as>
     <match>LAN_WAN</match>
     <field name="type">D</field>
     <description>Traffic External Block</description>
+    <group>pci_dss_1.3.2,pci_dss_10.2.4,nist_800_53_SC-7,nist_800_53_AU-3,hipaa_164.312(e)(1)</group>
+  </rule>
+
+  <!-- config changes -->
+  <rule id="100110" level="8">
+    <if_sid>100102</if_sid>
+    <field name="uni_changeagent">\w+</field>
+    <description>UniFi Config Change by $(uni_changeagent) in $(uni_changedsection)</description>
+    <group>pci_dss_10.5.5,pci_dss_11.5,nist_800_53_CM-3,nist_800_53_CM-6,nist_800_53_AU-12,hipaa_164.312(b)</group>
+  </rule>
+
+  <!-- threat detection -->
+  <rule id="100111" level="10">
+    <if_sid>100102</if_sid>
+    <field name="uni_risk">\w+</field>
+    <description>UniFi IPS Threat Detected: $(uni_signature)</description>
+    <group>pci_dss_11.4,nist_800_53_SI-4,nist_800_53_SI-3,hipaa_164.308(a)(5)(ii)(B)</group>
+  </rule>
+
+  <!-- wifi events -->
+  <rule id="100112" level="3">
+    <if_sid>100102</if_sid>
+    <field name="event_id">400</field>
+    <description>WiFi Client Connected: $(uni_clientdev) to $(uni_ssid)</description>
+    <group>pci_dss_10.2.5,nist_800_53_AC-17,nist_800_53_AU-3,hipaa_164.312(b)</group>
+  </rule>
+  <rule id="100113" level="3">
+    <if_sid>100102</if_sid>
+    <field name="event_id">401</field>
+    <description>WiFi Client Disconnected: $(uni_clientdev) from $(uni_ssid)</description>
+    <group>pci_dss_10.2.5,nist_800_53_AC-17,nist_800_53_AU-3,hipaa_164.312(b)</group>
   </rule>
 </group>
