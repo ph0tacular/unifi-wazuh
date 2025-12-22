@@ -19,12 +19,14 @@
     <match>LAN_LAN</match>
     <field name="type">A</field>
     <description>Traffic Internal Allow</description>
+    <group>pci_dss_10.2.1,nist_800_53_AU-3,hipaa_164.312(b)</group>
   </rule>
   <rule id="100105" level="3">
     <decoded_as>unifi-lan2wan</decoded_as>
     <match>LAN_WAN</match>
     <field name="type">A</field>
     <description>Traffic External Allow</description>
+    <group>pci_dss_10.2.1,nist_800_53_AU-3,hipaa_164.312(b)</group>
   </rule>
 
   <!-- traffic block -->
@@ -33,12 +35,14 @@
     <match>LAN_LAN</match>
     <field name="type">D</field>
     <description>Traffic Internal Block</description>
+    <group>pci_dss_1.3.2,pci_dss_10.2.4,nist_800_53_SC-7,nist_800_53_AU-3,hipaa_164.312(e)(1)</group>
   </rule>
   <rule id="100107" level="7">
     <decoded_as>unifi-lan2wan</decoded_as>
     <match>LAN_WAN</match>
     <field name="type">D</field>
     <description>Traffic External Block</description>
+    <group>pci_dss_1.3.2,pci_dss_10.2.4,nist_800_53_SC-7,nist_800_53_AU-3,hipaa_164.312(e)(1)</group>
   </rule>
 
   <!-- config changes -->
@@ -46,6 +50,7 @@
     <if_sid>100102</if_sid>
     <field name="uni_changeagent">\w+</field>
     <description>UniFi Config Change by $(uni_changeagent) in $(uni_changedsection)</description>
+    <group>pci_dss_10.5.5,pci_dss_11.5,nist_800_53_CM-3,nist_800_53_CM-6,nist_800_53_AU-12,hipaa_164.312(b)</group>
   </rule>
 
   <!-- threat detection -->
@@ -53,6 +58,7 @@
     <if_sid>100102</if_sid>
     <field name="uni_risk">\w+</field>
     <description>UniFi IPS Threat Detected: $(uni_signature)</description>
+    <group>pci_dss_11.4,nist_800_53_SI-4,nist_800_53_SI-3,hipaa_164.308(a)(5)(ii)(B)</group>
   </rule>
 
   <!-- wifi events -->
@@ -60,10 +66,12 @@
     <if_sid>100102</if_sid>
     <field name="event_id">400</field>
     <description>WiFi Client Connected: $(uni_clientdev) to $(uni_ssid)</description>
+    <group>pci_dss_10.2.5,nist_800_53_AC-17,nist_800_53_AU-3,hipaa_164.312(b)</group>
   </rule>
   <rule id="100113" level="3">
     <if_sid>100102</if_sid>
     <field name="event_id">401</field>
     <description>WiFi Client Disconnected: $(uni_clientdev) from $(uni_ssid)</description>
+    <group>pci_dss_10.2.5,nist_800_53_AC-17,nist_800_53_AU-3,hipaa_164.312(b)</group>
   </rule>
 </group>
