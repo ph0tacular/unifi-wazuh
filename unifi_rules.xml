@@ -11,6 +11,7 @@
     <if_sid>100102</if_sid>
     <match>UniFi OS</match>
     <description>UniFi Console $(type) event</description>
+    <group>mitre_t1078</group>
   </rule>
 
   <!-- traffic allow -->
@@ -19,14 +20,14 @@
     <match>LAN_LAN</match>
     <field name="type">A</field>
     <description>Traffic Internal Allow</description>
-    <group>pci_dss_10.2.1,nist_800_53_AU-3,hipaa_164.312(b)</group>
+    <group>pci_dss_10.2.1,nist_800_53_AU-3,hipaa_164.312(b),mitre_t1021</group>
   </rule>
   <rule id="100105" level="3">
     <decoded_as>unifi-lan2wan</decoded_as>
     <match>LAN_WAN</match>
     <field name="type">A</field>
     <description>Traffic External Allow</description>
-    <group>pci_dss_10.2.1,nist_800_53_AU-3,hipaa_164.312(b)</group>
+    <group>pci_dss_10.2.1,nist_800_53_AU-3,hipaa_164.312(b),mitre_t1048</group>
   </rule>
 
   <!-- traffic block -->
@@ -35,14 +36,14 @@
     <match>LAN_LAN</match>
     <field name="type">D</field>
     <description>Traffic Internal Block</description>
-    <group>pci_dss_1.3.2,pci_dss_10.2.4,nist_800_53_SC-7,nist_800_53_AU-3,hipaa_164.312(e)(1)</group>
+    <group>pci_dss_1.3.2,pci_dss_10.2.4,nist_800_53_SC-7,nist_800_53_AU-3,hipaa_164.312(e)(1),mitre_t1046</group>
   </rule>
   <rule id="100107" level="7">
     <decoded_as>unifi-lan2wan</decoded_as>
     <match>LAN_WAN</match>
     <field name="type">D</field>
     <description>Traffic External Block</description>
-    <group>pci_dss_1.3.2,pci_dss_10.2.4,nist_800_53_SC-7,nist_800_53_AU-3,hipaa_164.312(e)(1)</group>
+    <group>pci_dss_1.3.2,pci_dss_10.2.4,nist_800_53_SC-7,nist_800_53_AU-3,hipaa_164.312(e)(1),mitre_t1071</group>
   </rule>
 
   <!-- config changes -->
@@ -50,7 +51,7 @@
     <if_sid>100102</if_sid>
     <field name="uni_changeagent">\w+</field>
     <description>UniFi Config Change by $(uni_changeagent) in $(uni_changedsection)</description>
-    <group>pci_dss_10.5.5,pci_dss_11.5,nist_800_53_CM-3,nist_800_53_CM-6,nist_800_53_AU-12,hipaa_164.312(b)</group>
+    <group>pci_dss_10.5.5,pci_dss_11.5,nist_800_53_CM-3,nist_800_53_CM-6,nist_800_53_AU-12,hipaa_164.312(b),mitre_t1562</group>
   </rule>
 
   <!-- threat detection -->
@@ -58,7 +59,7 @@
     <if_sid>100102</if_sid>
     <field name="uni_risk">\w+</field>
     <description>UniFi IPS Threat Detected: $(uni_signature)</description>
-    <group>pci_dss_11.4,nist_800_53_SI-4,nist_800_53_SI-3,hipaa_164.308(a)(5)(ii)(B)</group>
+    <group>pci_dss_11.4,nist_800_53_SI-4,nist_800_53_SI-3,hipaa_164.308(a)(5)(ii)(B),mitre_t1190</group>
   </rule>
 
   <!-- wifi events -->
@@ -66,12 +67,193 @@
     <if_sid>100102</if_sid>
     <field name="event_id">400</field>
     <description>WiFi Client Connected: $(uni_clientdev) to $(uni_ssid)</description>
-    <group>pci_dss_10.2.5,nist_800_53_AC-17,nist_800_53_AU-3,hipaa_164.312(b)</group>
+    <group>pci_dss_10.2.5,nist_800_53_AC-17,nist_800_53_AU-3,hipaa_164.312(b),mitre_t1078</group>
   </rule>
   <rule id="100113" level="3">
     <if_sid>100102</if_sid>
     <field name="event_id">401</field>
+    <field name="uni_cat">Monitoring</field>
     <description>WiFi Client Disconnected: $(uni_clientdev) from $(uni_ssid)</description>
-    <group>pci_dss_10.2.5,nist_800_53_AC-17,nist_800_53_AU-3,hipaa_164.312(b)</group>
+    <group>pci_dss_10.2.5,nist_800_53_AC-17,nist_800_53_AU-3,hipaa_164.312(b),mitre_t1078</group>
+  </rule>
+
+  <!-- admin access -->
+  <rule id="100114" level="5">
+    <if_sid>100102</if_sid>
+    <field name="event_id">544</field>
+    <description>Admin Accessed UniFi via $(uni_accessway)</description>
+    <group>pci_dss_10.2.2,nist_800_53_AC-6,nist_800_53_AU-3,hipaa_164.312(a)(1),mitre_t1078</group>
+  </rule>
+
+  <!-- device events -->
+  <rule id="100115" level="5">
+    <if_sid>100102</if_sid>
+    <field name="event_id">200</field>
+    <description>UniFi Device Adopted: $(uni_devname)</description>
+    <group>pci_dss_11.2,nist_800_53_CM-8,hipaa_164.310(d)(1),mitre_t1200</group>
+  </rule>
+  <rule id="100116" level="8">
+    <if_sid>100102</if_sid>
+    <field name="event_id">201</field>
+    <description>UniFi Device Offline: $(uni_devname)</description>
+    <group>pci_dss_10.6,nist_800_53_SI-4,hipaa_164.312(b),mitre_t1489</group>
+  </rule>
+
+  <!-- wifi roaming -->
+  <rule id="100117" level="3">
+    <if_sid>100102</if_sid>
+    <field name="event_id">304</field>
+    <description>WiFi Client Roaming: $(uni_clientdev)</description>
+    <group>pci_dss_10.2.5,nist_800_53_AC-17,hipaa_164.312(b),mitre_t1078</group>
+  </rule>
+
+  <!-- wired client events -->
+  <rule id="100118" level="3">
+    <if_sid>100102</if_sid>
+    <field name="event_id">302</field>
+    <description>Wired Client Connected: $(uni_clientdev)</description>
+    <group>pci_dss_10.2.5,nist_800_53_AC-17,nist_800_53_AU-3,hipaa_164.312(b),mitre_t1078</group>
+  </rule>
+  <rule id="100119" level="3">
+    <if_sid>100102</if_sid>
+    <field name="event_id">303</field>
+    <description>Wired Client Disconnected: $(uni_clientdev)</description>
+    <group>pci_dss_10.2.5,nist_800_53_AC-17,nist_800_53_AU-3,hipaa_164.312(b),mitre_t1078</group>
+  </rule>
+
+  <!-- security events -->
+  <rule id="100120" level="12">
+    <if_sid>100102</if_sid>
+    <field name="event_id">401</field>
+    <field name="uni_cat">Security</field>
+    <description>Honeypot Triggered from $(srcip)</description>
+    <group>pci_dss_11.4,nist_800_53_SI-4,nist_800_53_SI-3,hipaa_164.308(a)(5)(ii)(B),mitre_t1046</group>
+  </rule>
+  <rule id="100121" level="10">
+    <if_sid>100102</if_sid>
+    <field name="event_id">402</field>
+    <description>Blocked by Firewall: $(uni_signature)</description>
+    <group>pci_dss_1.3.2,pci_dss_11.4,nist_800_53_SC-7,nist_800_53_SI-4,hipaa_164.312(e)(1),mitre_t1071</group>
+  </rule>
+
+  <!-- WAN events -->
+  <rule id="100122" level="8">
+    <if_sid>100102</if_sid>
+    <field name="event_id">500</field>
+    <description>WAN Failover Detected</description>
+    <group>pci_dss_10.6,nist_800_53_CP-10,nist_800_53_SI-4,hipaa_164.312(b),mitre_t1499</group>
+  </rule>
+  <rule id="100123" level="5">
+    <if_sid>100102</if_sid>
+    <field name="event_id">501</field>
+    <description>High Latency Detected on WAN</description>
+    <group>pci_dss_10.6,nist_800_53_SI-4,hipaa_164.312(b),mitre_t1499</group>
+  </rule>
+  <rule id="100124" level="7">
+    <if_sid>100102</if_sid>
+    <field name="event_id">502</field>
+    <description>Packet Loss Detected on WAN</description>
+    <group>pci_dss_10.6,nist_800_53_SI-4,hipaa_164.312(b),mitre_t1499</group>
+  </rule>
+
+  <!-- PoE events -->
+  <rule id="100125" level="7">
+    <if_sid>100102</if_sid>
+    <field name="event_id">600</field>
+    <description>Insufficient PoE Output on $(uni_devname)</description>
+    <group>pci_dss_10.6,nist_800_53_PE-1,hipaa_164.310(a)(2)(ii),mitre_t1200</group>
+  </rule>
+  <rule id="100126" level="5">
+    <if_sid>100102</if_sid>
+    <field name="event_id">601</field>
+    <description>AP Underpowered: $(uni_devname)</description>
+    <group>pci_dss_10.6,nist_800_53_PE-1,hipaa_164.310(a)(2)(ii),mitre_t1200</group>
+  </rule>
+  <rule id="100127" level="7">
+    <if_sid>100102</if_sid>
+    <field name="event_id">602</field>
+    <description>PoE Availability Exceeded on $(uni_devname)</description>
+    <group>pci_dss_10.6,nist_800_53_PE-1,hipaa_164.310(a)(2)(ii),mitre_t1200</group>
+  </rule>
+
+  <!-- enrichment: IPS threat from internal source -->
+  <rule id="100128" level="13">
+    <if_sid>100111</if_sid>
+    <srcip>10.0.0.0/8</srcip>
+    <srcip>172.16.0.0/12</srcip>
+    <srcip>192.168.0.0/16</srcip>
+    <description>IPS Threat from Internal Host $(srcip): $(uni_signature)</description>
+    <group>pci_dss_11.4,nist_800_53_SI-4,nist_800_53_IR-4,hipaa_164.308(a)(6)(ii),mitre_t1190</group>
+  </rule>
+
+  <!-- correlation / frequency rules -->
+  <rule id="100150" level="10" frequency="10" timeframe="120">
+    <if_matched_sid>100106</if_matched_sid>
+    <same_source_ip />
+    <description>Multiple Internal Blocks from $(srcip) (possible lateral scan)</description>
+    <group>pci_dss_1.3.2,pci_dss_10.2.4,nist_800_53_SC-7,nist_800_53_SI-4,hipaa_164.312(e)(1),mitre_t1046</group>
+  </rule>
+  <rule id="100151" level="10" frequency="10" timeframe="120">
+    <if_matched_sid>100107</if_matched_sid>
+    <same_source_ip />
+    <description>Multiple External Blocks from $(srcip) (possible exfiltration attempts)</description>
+    <group>pci_dss_1.3.2,pci_dss_10.2.4,nist_800_53_SC-7,nist_800_53_SI-4,hipaa_164.312(e)(1),mitre_t1048</group>
+  </rule>
+  <rule id="100152" level="13" frequency="5" timeframe="300">
+    <if_matched_sid>100111</if_matched_sid>
+    <description>Multiple IPS Threats Detected (possible active attack)</description>
+    <group>pci_dss_11.4,nist_800_53_SI-4,nist_800_53_IR-4,hipaa_164.308(a)(6)(ii),mitre_t1190</group>
+  </rule>
+  <rule id="100153" level="8" frequency="8" timeframe="60">
+    <if_matched_sid>100113</if_matched_sid>
+    <same_field>uni_clientdev</same_field>
+    <description>Frequent WiFi Disconnects for $(uni_clientdev) (possible deauth attack)</description>
+    <group>pci_dss_10.2.5,nist_800_53_AC-17,nist_800_53_SI-4,hipaa_164.312(b),mitre_t1498</group>
+  </rule>
+
+  <!-- catch-all for unmatched CEF events -->
+  <rule id="100199" level="3">
+    <if_sid>100102</if_sid>
+    <description>UniFi CEF Event: $(type) (event_id $(event_id))</description>
+  </rule>
+
+  <!-- hostapd rules -->
+  <rule id="100200" level="0">
+    <decoded_as>unifi-hostapd</decoded_as>
+    <description>UniFi hostapd event</description>
+  </rule>
+  <rule id="100201" level="3">
+    <if_sid>100200</if_sid>
+    <field name="uni_action">associated</field>
+    <description>STA $(srcmac) Associated on $(uni_iface)</description>
+    <group>pci_dss_10.2.5,nist_800_53_AC-17,hipaa_164.312(b),mitre_t1078</group>
+  </rule>
+  <rule id="100202" level="3">
+    <if_sid>100200</if_sid>
+    <field name="uni_action">disassociated</field>
+    <description>STA $(srcmac) Disassociated from $(uni_iface)</description>
+    <group>pci_dss_10.2.5,nist_800_53_AC-17,hipaa_164.312(b),mitre_t1078</group>
+  </rule>
+  <rule id="100203" level="5">
+    <if_sid>100200</if_sid>
+    <field name="uni_action">authentication</field>
+    <field name="uni_radius_result">succeeded</field>
+    <description>RADIUS Auth Success for $(srcmac) on $(uni_iface)</description>
+    <group>pci_dss_10.2.5,nist_800_53_IA-2,nist_800_53_AU-3,hipaa_164.312(d),mitre_t1078</group>
+  </rule>
+  <rule id="100204" level="8">
+    <if_sid>100200</if_sid>
+    <field name="uni_action">authentication</field>
+    <field name="uni_radius_result">failed</field>
+    <description>RADIUS Auth Failed for $(srcmac) on $(uni_iface)</description>
+    <group>pci_dss_10.2.4,nist_800_53_IA-2,nist_800_53_AU-3,hipaa_164.312(d),mitre_t1110</group>
+  </rule>
+
+  <!-- hostapd correlation -->
+  <rule id="100210" level="10" frequency="5" timeframe="120">
+    <if_matched_sid>100204</if_matched_sid>
+    <same_field>srcmac</same_field>
+    <description>Multiple RADIUS Auth Failures for $(srcmac) (possible brute force)</description>
+    <group>pci_dss_10.2.4,pci_dss_11.4,nist_800_53_IA-2,nist_800_53_SI-4,hipaa_164.312(d),mitre_t1110</group>
   </rule>
 </group>
