@@ -38,7 +38,7 @@ Jul 30 05:35:34 udr7 CEF:0|Ubiquiti|UniFi Network|9.3.45|400|WiFi Client Connect
 <!-- kv start -->
 <decoder name="unifi">
   <parent>unifi</parent>
-  <regex type="pcre2">UNIFIcategory=(\w+)</regex>
+  <regex type="pcre2">UNIFIcategory=(.+?)(?=\s(?:UNIFI\w+=|src=|dst=|spt=|dpt=|proto=|msg=))</regex>
   <order>uni_cat</order>
 </decoder>
 
