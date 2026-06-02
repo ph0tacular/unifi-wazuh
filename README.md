@@ -1,7 +1,7 @@
 # unifi-wazuh
 Custom Wazuh decoders and rules for UniFi Network devices. Parses CEF (Common Event Format) syslog events and hostapd device syslog from UniFi OS and UniFi Network applications.
 
-Tested using UniFi OS 5.0.16 + UniFi Network 10.2.105 + Wazuh 4.14.
+Tested using UniFi OS 5.1.12 + UniFi Network 10.4.57 + Wazuh 4.14.
 
 ## Events Covered
 
@@ -96,6 +96,10 @@ Use `wazuh-analysisd` to validate the decoders and rules:
 Paste a sample UniFi syslog line to verify the correct decoder and rules match.
 
 ## Changelog
+
+2026-06-02:
+* Fixed a couple regex mappings (thanks driemekasten)
+* Updated associated rules 
 
 2026-04-19:
 * Added support for UniFi OS 5.0.16 / Network 10.2.105
