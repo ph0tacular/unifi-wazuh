@@ -226,6 +226,19 @@ Jul 30 05:35:34 udr7 CEF:0|Ubiquiti|UniFi Network|9.3.45|400|WiFi Client Connect
   <order>uni_ipssessionid</order>
 </decoder>
 
+<!-- IPS threat: client that triggered the alert -->
+<decoder name="unifi">
+  <parent>unifi</parent>
+  <regex type="pcre2">UNIFIsrcClientAlias=(.+?)(?=\s(?:UNIFI\w+=|src=|dst=|spt=|dpt=|proto=|msg=))</regex>
+  <order>uni_srcclientalias</order>
+</decoder>
+
+<decoder name="unifi">
+  <parent>unifi</parent>
+  <regex type="pcre2">UNIFIsrcClientMac=([0-9a-fA-F:]{17})</regex>
+  <order>uni_srcclientmac</order>
+</decoder>
+
 <!-- hostapd device syslog -->
 <decoder name="unifi-hostapd">
   <program_name>hostapd</program_name>
