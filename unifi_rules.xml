@@ -49,7 +49,7 @@
   <!-- config changes -->
   <rule id="100110" level="8">
     <if_sid>100102</if_sid>
-    <field name="uni_changeagent">\w+</field>
+    <field name="type">Config\s\w+</field>
     <description>UniFi Config Change by $(uni_changeagent) in $(uni_changedsection)</description>
     <group>pci_dss_10.5.5,pci_dss_11.5,nist_800_53_CM-3,nist_800_53_CM-6,nist_800_53_AU-12,hipaa_164.312(b),mitre_t1562</group>
   </rule>
@@ -57,7 +57,7 @@
   <!-- threat detection -->
   <rule id="100111" level="10">
     <if_sid>100102</if_sid>
-    <field name="uni_risk">\w+</field>
+    <field name="uni_ipssessionid">\d+</field>
     <description>UniFi IPS Threat Detected: $(uni_signature)</description>
     <group>pci_dss_11.4,nist_800_53_SI-4,nist_800_53_SI-3,hipaa_164.308(a)(5)(ii)(B),mitre_t1190</group>
   </rule>
@@ -99,13 +99,6 @@
     <description>UniFi Device Offline: $(uni_devname)</description>
     <group>pci_dss_10.6,nist_800_53_SI-4,hipaa_164.312(b),mitre_t1489</group>
   </rule>
-  <!-- event_id 112 confirmed live on UniFi Network 10.4.57 (UCG-Fiber) -->
-  <rule id="100108" level="3">
-    <if_sid>100102</if_sid>
-    <field name="event_id">112</field>
-    <description>High Latency Detected on $(uni_devname)</description>
-    <group>pci_dss_10.6,nist_800_53_SI-4,hipaa_164.312(b),mitre_t1499</group>
-  </rule>
 
   <!-- wifi roaming -->
   <rule id="100117" level="3">
@@ -116,6 +109,19 @@
   </rule>
 
   <!-- wired client events -->
+  <rule id="100108" level="3">
+    <if_sid>100102</if_sid>
+    <field name="event_id">403</field>
+    <description>Wired Client Connected: $(uni_clientdev)</description>
+    <group>pci_dss_10.2.5,nist_800_53_AC-17,nist_800_53_AU-3,hipaa_164.312(b),mitre_t1078</group>
+  </rule>
+  <rule id="100109" level="3">
+    <if_sid>100102</if_sid>
+    <field name="event_id">404</field>
+    <description>Wired Client Disconnected: $(uni_clientdev)</description>
+    <group>pci_dss_10.2.5,nist_800_53_AC-17,nist_800_53_AU-3,hipaa_164.312(b),mitre_t1078</group>
+  </rule>
+  <!-- legacy wired event_id's, to be reviewed -->
   <rule id="100118" level="3">
     <if_sid>100102</if_sid>
     <field name="event_id">302</field>
@@ -125,17 +131,6 @@
   <rule id="100119" level="3">
     <if_sid>100102</if_sid>
     <field name="event_id">303</field>
-    <description>Wired Client Disconnected: $(uni_clientdev)</description>
-    <group>pci_dss_10.2.5,nist_800_53_AC-17,nist_800_53_AU-3,hipaa_164.312(b),mitre_t1078</group>
-  </rule>
-  <!-- event_id 404 confirmed live on UniFi Network 10.4.x (UCG-Fiber) as an
-       alternate value for the same "Wired Client Disconnected" event that
-       100119 covers via event_id 303 on older firmware; kept as a
-       separate rule rather than replacing 303, since firmware versions
-       appear to disagree on the ID and this repo doesn't pin a version. -->
-  <rule id="100109" level="3">
-    <if_sid>100102</if_sid>
-    <field name="event_id">404</field>
     <description>Wired Client Disconnected: $(uni_clientdev)</description>
     <group>pci_dss_10.2.5,nist_800_53_AC-17,nist_800_53_AU-3,hipaa_164.312(b),mitre_t1078</group>
   </rule>
@@ -156,6 +151,19 @@
   </rule>
 
   <!-- WAN events -->
+  <rule id="100129" level="5">
+    <if_sid>100102</if_sid>
+    <field name="event_id">112</field>
+    <description>High Latency Detected on $(uni_wanname)</description>
+    <group>pci_dss_10.6,nist_800_53_SI-4,hipaa_164.312(b),mitre_t1499</group>
+  </rule>
+   <rule id="100130" level="7">
+    <if_sid>100102</if_sid>
+    <field name="event_id">113</field>
+    <description>Packet Loss Detected on $(uni_wanname)</description>
+    <group>pci_dss_10.6,nist_800_53_SI-4,hipaa_164.312(b),mitre_t1499</group>
+  </rule>
+  <!-- legacy WAN event_id's, to be reviewed -->
   <rule id="100122" level="8">
     <if_sid>100102</if_sid>
     <field name="event_id">500</field>
