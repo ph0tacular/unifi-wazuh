@@ -1,7 +1,7 @@
 # unifi-wazuh
 Custom Wazuh decoders and rules for UniFi Network devices. Parses CEF (Common Event Format) syslog events and hostapd device syslog from UniFi OS and UniFi Network applications.
 
-Tested using UniFi OS 5.1.12 + UniFi Network 10.4.57 + Wazuh 4.14.
+Tested using UniFi OS 5.1.31 + UniFi Network 10.6.101 + Wazuh 4.14.
 
 ## Events Covered
 
@@ -15,6 +15,8 @@ Tested using UniFi OS 5.1.12 + UniFi Network 10.4.57 + Wazuh 4.14.
 | 100105 | Traffic External Allow (LAN→WAN) | 3 |
 | 100106 | Traffic Internal Block (LAN→LAN) | 7 |
 | 100107 | Traffic External Block (LAN→WAN) | 7 |
+| 100108 | Wired Client Connected | 3 |
+| 100109 | Wired Client Disconnected | 3 |
 | 100110 | Configuration Change | 8 |
 | 100111 | IPS Threat Detected | 10 |
 | 100112 | WiFi Client Connected | 3 |
@@ -23,17 +25,19 @@ Tested using UniFi OS 5.1.12 + UniFi Network 10.4.57 + Wazuh 4.14.
 | 100115 | Device Adopted | 5 |
 | 100116 | Device Offline | 8 |
 | 100117 | WiFi Client Roaming | 3 |
-| 100118 | Wired Client Connected | 3 |
-| 100119 | Wired Client Disconnected | 3 |
+| 100118 | Wired Client Connected (legacy) | 3 |
+| 100119 | Wired Client Disconnected (legacy) | 3 |
 | 100120 | Honeypot Triggered | 12 |
 | 100121 | Blocked by Firewall (CEF) | 10 |
-| 100122 | WAN Failover | 8 |
-| 100123 | High Latency Detected | 5 |
-| 100124 | Packet Loss Detected | 7 |
+| 100122 | WAN Failover (under review) | 8 |
+| 100123 | High Latency Detected (legacy) | 5 |
+| 100124 | Packet Loss Detected (legacy) | 7 |
 | 100125 | Insufficient PoE Output | 7 |
 | 100126 | AP Underpowered | 5 |
 | 100127 | PoE Availability Exceeded | 7 |
 | 100128 | IPS Threat from Internal Host | 13 |
+| 100129 | High Latency Detected | 5 |
+| 100130 | Packet Loss Detected | 7 |
 | 100199 | Unmatched CEF Event (catch-all) | 3 |
 
 ### Hostapd Rules
@@ -96,6 +100,16 @@ Use `wazuh-analysisd` to validate the decoders and rules:
 Paste a sample UniFi syslog line to verify the correct decoder and rules match.
 
 ## Changelog
+
+2026-09-05:
+* Support for UniFi OS 5.1.31 / Network 10.6.101
+* Merged commit #5 (thanks swong001) but set UNIFIsrcClientAlias/UNIFIsrcClientMac to uni_clientdev/uni_clientmac 
+* Updated rule event ID's leaving previous ID's as legacy with additional for review
+* Revised rule 100111(IPS Threat Detected) such that it doesn't trigger on 'Blocked by Firewall' events
+* Revised rule 100110(Configuration Change) such that it doesn't trigger on 'Network Accessed' events
+* Reordered several child decoders to better align with top-level categories
+* Added new child decoders for app(Network Application Layer Protocol), direction, srcZone, dstZone, dstRegion, dstDomain, bytesSent, bytesReceived, totalBytes, wanName, srcClientIP
+* Tightened up regex for certain decoders
 
 2026-06-02:
 * Fixed a couple regex mappings (thanks driemekasten)
