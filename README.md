@@ -71,6 +71,8 @@ cp unifi_decoders.xml /var/ossec/etc/decoders/
 cp unifi_rules.xml /var/ossec/etc/rules/
 ```
 
+> **Note:** Wazuh loads rule files in alphabetical order by filename. See [RULE_LOAD_ORDER.md](RULE_LOAD_ORDER.md) before renaming files or adding your own rules.
+
 Set the decoder and rules permissions appropriately:
 
 ```bash
