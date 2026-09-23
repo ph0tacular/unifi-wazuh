@@ -28,7 +28,7 @@ Tested using UniFi OS 5.1.31 + UniFi Network 10.6.101 + Wazuh 4.14.
 | 100118 | Wired Client Connected (legacy) | 3 |
 | 100119 | Wired Client Disconnected (legacy) | 3 |
 | 100120 | Honeypot Triggered | 12 |
-| 100121 | Blocked by Firewall (CEF) | 10 |
+| 100121 | Blocked by Firewall (CEF) | 7 |
 | 100122 | WAN Failover (under review) | 8 |
 | 100123 | High Latency Detected (legacy) | 5 |
 | 100124 | Packet Loss Detected (legacy) | 7 |
@@ -38,6 +38,7 @@ Tested using UniFi OS 5.1.31 + UniFi Network 10.6.101 + Wazuh 4.14.
 | 100128 | IPS Threat from Internal Host | 13 |
 | 100129 | High Latency Detected | 5 |
 | 100130 | Packet Loss Detected | 7 |
+| 100131 | Device Update Failed | 8 |
 | 100199 | Unmatched CEF Event (catch-all) | 3 |
 
 ### Hostapd Rules
@@ -103,12 +104,20 @@ Paste a sample UniFi syslog line to verify the correct decoder and rules match.
 
 ## Changelog
 
+2026-09-23:
+* Merged commit #6 resolving WiFi Client Roaming events appearing as Blocked by Firewall events and added rule file policies and best practices documentation from FarmhouseNetworking
+* Reordered several rules to better align with top-level categories
+* Updated event ID for Blocked by Firewall events and adjusted rule level to reflect that the event is no longer necessarily an IPS threat block
+* Updated event ID for Device Offline events
+* Added rule for Device Update Failed events
+* Disabled Honeypot Triggered(ID 100120) rule as the specified event ID has most certainly been replaced - under review but should be caught by catch-all(ID 100199)
+
 2026-09-05:
 * Support for UniFi OS 5.1.31 / Network 10.6.101
 * Merged commit #5 (thanks swong001) but set UNIFIsrcClientAlias/UNIFIsrcClientMac to uni_clientdev/uni_clientmac 
 * Updated rule event ID's leaving previous ID's as legacy with additional for review
-* Revised rule 100111(IPS Threat Detected) such that it doesn't trigger on 'Blocked by Firewall' events
-* Revised rule 100110(Configuration Change) such that it doesn't trigger on 'Network Accessed' events
+* Revised rule 100111(IPS Threat Detected) such that it doesn't trigger on Blocked by Firewall events
+* Revised rule 100110(Configuration Change) such that it doesn't trigger on Network Accessed events
 * Reordered several child decoders to better align with top-level categories
 * Added new child decoders for app(Network Application Layer Protocol), direction, srcZone, dstZone, dstRegion, dstDomain, bytesSent, bytesReceived, totalBytes, wanName, srcClientIP
 * Tightened up regex for certain decoders
