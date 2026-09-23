@@ -45,6 +45,12 @@
     <description>Traffic External Block</description>
     <group>pci_dss_1.3.2,pci_dss_10.2.4,nist_800_53_SC-7,nist_800_53_AU-3,hipaa_164.312(e)(1),mitre_t1071</group>
   </rule>
+  <rule id="100121" level="7">
+    <if_sid>100102</if_sid>
+    <field name="event_id">203</field>
+    <description>Blocked by Firewall</description>
+    <group>pci_dss_1.3.2,pci_dss_11.4,nist_800_53_SC-7,nist_800_53_SI-4,hipaa_164.312(e)(1),mitre_t1071</group>
+  </rule>
 
   <!-- config changes -->
   <rule id="100110" level="8">
@@ -77,6 +83,12 @@
     <description>WiFi Client Disconnected: $(uni_clientdev) from $(uni_ssid)</description>
     <group>pci_dss_10.2.5,nist_800_53_AC-17,nist_800_53_AU-3,hipaa_164.312(b),mitre_t1078</group>
   </rule>
+   <rule id="100117" level="3">
+    <if_sid>100102</if_sid>
+    <field name="event_id">402</field>
+    <description>WiFi Client Roaming: $(uni_clientdev)</description>
+    <group>pci_dss_10.2.5,nist_800_53_AC-17,hipaa_164.312(b),mitre_t1078</group>
+  </rule>
 
   <!-- admin access -->
   <rule id="100114" level="5">
@@ -89,23 +101,21 @@
   <!-- device events -->
   <rule id="100115" level="5">
     <if_sid>100102</if_sid>
-    <field name="event_id">200</field>
+    <field name="event_id">200</field><!-- very likely legacy id -->
     <description>UniFi Device Adopted: $(uni_devname)</description>
     <group>pci_dss_11.2,nist_800_53_CM-8,hipaa_164.310(d)(1),mitre_t1200</group>
   </rule>
+  <rule id="100131" level="8">
+    <if_sid>100102</if_sid>
+    <field name="event_id">511</field>
+    <description>UniFi Device Update Failed: $(uni_devname)</description>
+    <group>nist_800_53_SI-2,hipaa_164.308(a)(1)</group>
+  </rule>
   <rule id="100116" level="8">
     <if_sid>100102</if_sid>
-    <field name="event_id">201</field>
+    <field name="event_id">512</field>
     <description>UniFi Device Offline: $(uni_devname)</description>
     <group>pci_dss_10.6,nist_800_53_SI-4,hipaa_164.312(b),mitre_t1489</group>
-  </rule>
-
-  <!-- wifi roaming -->
-  <rule id="100117" level="3">
-    <if_sid>100102</if_sid>
-    <field name="event_id">402</field>
-    <description>WiFi Client Roaming: $(uni_clientdev)</description>
-    <group>pci_dss_10.2.5,nist_800_53_AC-17,hipaa_164.312(b),mitre_t1078</group>
   </rule>
 
   <!-- wired client events -->
@@ -135,7 +145,7 @@
     <group>pci_dss_10.2.5,nist_800_53_AC-17,nist_800_53_AU-3,hipaa_164.312(b),mitre_t1078</group>
   </rule>
 
-  <!-- security events -->
+  <!-- security events / disabling for event id review
   <rule id="100120" level="12">
     <if_sid>100102</if_sid>
     <field name="event_id">401</field>
@@ -143,27 +153,7 @@
     <description>Honeypot Triggered from $(srcip)</description>
     <group>pci_dss_11.4,nist_800_53_SI-4,nist_800_53_SI-3,hipaa_164.308(a)(5)(ii)(B),mitre_t1046</group>
   </rule>
-    <!-- DISABLED: event_id 402 is confirmed live (raw CEF samples across 3
-       UniFi sites, 2026-09-14) to be "WiFi Client Roamed", not a firewall-
-       block event - Ubiquiti's own WiFi-client event_id sequence is
-       400=Connected, 401=Disconnected, 402=Roamed (see 100112/100113/100199
-       above, which already hardcode 400/401 correctly). This rule's
-       event_id=402 match had no genuine firewall-block traffic behind it in
-       production: a sample of "Blocked by Firewall" alerts showed 100% with
-       an empty uni_signature substitution, i.e. zero real IPS/threat-
-       signature hits - every one was a roam-event collision. Genuine
-       firewall block/deny is already covered by 100106/100107 via the
-       syslog kernel decoder (unifi-lan2lan/unifi-lan2wan), which match on
-       the decoded DROP/REJECT type rather than a CEF event_id. Left in
-       place at level 0 (harmless, no alert) rather than deleted, in case a
-       real UniFi CEF firewall/IPS-block signature is identified later and
-       this rule ID is reused. -->
-  <rule id="100121" level="0">
-    <if_sid>100102</if_sid>
-    <field name="event_id">402</field>
-    <description>Blocked by Firewall: $(uni_signature) [DISABLED]</description>
-    <group>pci_dss_1.3.2,pci_dss_11.4,nist_800_53_SC-7,nist_800_53_SI-4,hipaa_164.312(e)(1),mitre_t1071</group>
-  </rule>
+  -->
 
   <!-- WAN events -->
   <rule id="100129" level="5">
