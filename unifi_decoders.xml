@@ -213,6 +213,12 @@ Jul 30 05:35:34 udr7 CEF:0|Ubiquiti|UniFi Network|9.3.45|400|WiFi Client Connect
   <order>uni_totalbytes</order>
 </decoder>
 
+<decoder name="unifi">
+  <parent>unifi</parent>
+  <regex type="pcre2">UNIFIpolicyName=(.+?)(?=\s(?:UNIFI\w+=|src=|dst=|spt=|dpt=|proto=|msg=))</regex>
+  <order>uni_policyname</order>
+</decoder>
+
 <!-- client/device/network descriptors -->
 <decoder name="unifi">
   <parent>unifi</parent>
